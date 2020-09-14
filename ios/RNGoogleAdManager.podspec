@@ -10,7 +10,7 @@ Pod::Spec.new do |s|
   s.license      = "MIT"
   s.authors      = "Callosum Software GmbH"
   s.platform     = :ios, "7.0"
-  s.source       = { :git => "https://github.com/callosum-software/react-native-google-ad-manager.git", :tag => "master" }
+  s.source       = { :git => "https://github.com/fourtran/react-native-google-ad-manager.git", :tag => "master" }
   s.source_files  = "RNGoogleAdManager/**/*.{h,m,swift}"
   s.requires_arc = true
 

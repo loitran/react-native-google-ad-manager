@@ -159,7 +159,6 @@ class RNGAMBanner extends React.PureComponent {
         onAdRequest={this._onAdRequest}
         onNativeError={this._onNativeError}
         onPropsSet={this._onPropsSet}
-        prebidAdId={this.props.prebidAdId}
         ref={this._ref}
         style={this.props.style}
         targeting={this.props.targeting}
@@ -180,7 +179,6 @@ RNGAMBanner.propTypes = {
   onAdRequest: P.func,
   onNativeError: P.func,
   onPropsSet: P.func,
-  prebidAdId: P.string,
   style: ViewPropTypes.style,
   targeting: P.object,
   testDeviceIds: P.arrayOf(P.string),
@@ -196,7 +194,6 @@ RNGAMBanner.defaultProps = {
   onAdRequest: noop,
   onNativeError: noop,
   onPropsSet: noop,
-  prebidAdId: '',
   style: {},
   targeting: {},
   testDeviceIds: [],

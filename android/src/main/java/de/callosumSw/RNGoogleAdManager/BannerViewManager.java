@@ -25,12 +25,6 @@ import com.google.android.gms.ads.doubleclick.AppEventListener;
 import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
 import com.google.android.gms.ads.doubleclick.PublisherAdView;
 
-import org.prebid.mobile.BannerAdUnit;
-import org.prebid.mobile.ResultCode;
-import org.prebid.mobile.OnCompleteListener;
-import org.prebid.mobile.addendum.AdViewUtils;
-import org.prebid.mobile.addendum.PbFindSizeError;
-
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -60,7 +54,6 @@ class BannerView extends ReactViewGroup {
     protected Integer adWidth = null;
     protected Integer adWidthInPixel = null;
     protected Context context = null;
-    protected String prebidAdId = null;
     protected ArrayList<String> testDeviceIds = null;
     protected Map<String, Object> targeting = null;
 
@@ -246,22 +239,7 @@ class BannerView extends ReactViewGroup {
                 super.onAdLoaded();
 
                 try {
-                    if(!"".equals(prebidAdId)){
-                        AdViewUtils.findPrebidCreativeSize(adView, new AdViewUtils.PbFindSizeListener() {
-                            @Override
-                            public void success(int width, int height) {
-                                adView.setAdSizes(new AdSize(width, height));
-                                handleLoad("Prebid");
-                            }
-
-                            @Override
-                            public void failure(@NonNull PbFindSizeError error) {
-                                handleLoad("GAM");
-                            }
-                        });
-                    } else {
-                        handleLoad("GAM");
-                    }
+                    handleLoad("GAM");
                 } catch (Exception e) {
                     BannerView.this.logAndSendError(e);
                 }
@@ -306,25 +284,8 @@ class BannerView extends ReactViewGroup {
 
             WritableMap event = Arguments.createMap();
 
-            if(!"".equals(prebidAdId)){
-                final String prebidAdUnitId = this.prebidAdId;
-
-                BannerAdUnit bannerAdUnit = new BannerAdUnit(prebidAdUnitId, 300, 250);
-
-                Log.d(LOG_TAG, "Prebid request with adunit id " + prebidAdUnitId);
-
-                bannerAdUnit.fetchDemand(adRequest, new OnCompleteListener() {
-                    @Override
-                    public void onComplete(ResultCode resultCode) {
-                        Log.d(LOG_TAG, "Prebid response code: " + resultCode);
-                        Log.d(LOG_TAG, "GAM Banner request with adunit id " + adUnitId + " with size " + adSize);
-                        BannerView.this.adView.loadAd(adRequest);
-                    }
-                });
-            } else {
-                Log.d(LOG_TAG, "GAM Banner request with adunit id " + adUnitId + " with size " + adSize);
-                this.adView.loadAd(adRequest);
-            }
+            Log.d(LOG_TAG, "GAM Banner request with adunit id " + adUnitId + " with size " + adSize);
+            this.adView.loadAd(adRequest);
             sendEvent(AD_REQUEST, event);
         } catch (Exception e) {
             logAndSendError(e);
@@ -507,11 +468,6 @@ public class BannerViewManager extends ViewGroupManager<BannerView> {
     public void setAdSize(BannerView view, @Nullable String adType) {
         Log.d(LOG_TAG, String.valueOf(adType));
         view.adType = adType;
-    }
-
-    @ReactProp(name = "prebidAdId")
-    public void setPrebidAdId(BannerView view, @Nullable String prebidAdId) {
-        view.prebidAdId = prebidAdId;
     }
 
     @ReactProp(name = "testDeviceIds")
